@@ -1,0 +1,12 @@
+{
+  "tab_name": "Countdown",
+  "script_name": "Countdown",
+  "script_file": "scripts/demo_countdown.py",
+  "description": "Counts down from 10 to liftoff with 0.8s intervals.",
+  "enabled": true,
+  "logging": false,
+  "order": 4,
+  "args": [
+    "d"
+  ]
+}

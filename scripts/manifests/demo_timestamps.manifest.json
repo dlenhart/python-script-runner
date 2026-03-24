@@ -1,0 +1,11 @@
+{
+  "tab_name": "Timestamps",
+  "script_name": "Timestamps",
+  "script_file": "scripts/demo_timestamps.py",
+  "description": "Logs 8 heartbeat timestamps at 1-second intervals.",
+  "enabled": true,
+  "order": 7,
+  "args": [
+    "no"
+  ]
+}

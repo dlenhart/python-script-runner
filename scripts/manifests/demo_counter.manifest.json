@@ -1,0 +1,12 @@
+{
+  "tab_name": "Counter",
+  "script_name": "Counter",
+  "script_file": "scripts/demo_counter.py",
+  "description": "Counts from 1 to 10 with a half-second delay between each number.",
+  "enabled": true,
+  "logging": true,
+  "order": 5,
+  "args": [
+    "d"
+  ]
+}

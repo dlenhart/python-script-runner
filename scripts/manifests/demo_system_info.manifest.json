@@ -1,0 +1,9 @@
+{
+  "tab_name": "System Info",
+  "script_name": "System Info",
+  "script_file": "scripts/demo_system_info.py",
+  "description": "Gathers and displays system information.",
+  "enabled": true,
+  "logging": true,
+  "order": 1
+}

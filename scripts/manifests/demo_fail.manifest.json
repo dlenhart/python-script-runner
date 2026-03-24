@@ -1,0 +1,9 @@
+{
+  "tab_name": "Fail Demo",
+  "script_name": "Fail Demo",
+  "script_file": "scripts/demo_fail.py",
+  "description": "Intentionally exits with a non-zero code to test the error tab indicator.",
+  "enabled": true,
+  "logging": false,
+  "order": 8
+}

@@ -1,0 +1,9 @@
+{
+  "tab_name": "Test",
+  "script_name": "Test",
+  "script_file": "scripts/test.py",
+  "description": "Test script to verify the GUI runner works correctly.",
+  "enabled": true,
+  "logging": true,
+  "order": 6
+}

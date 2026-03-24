@@ -1,0 +1,9 @@
+{
+  "tab_name": "Progress",
+  "script_name": "Progress Bar",
+  "script_file": "scripts/demo_progress.py",
+  "description": "Simulates a progress bar processing 20 items.",
+  "enabled": true,
+  "logging": false,
+  "order": 3
+}

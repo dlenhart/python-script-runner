@@ -1,0 +1,9 @@
+{
+  "tab_name": "Fibonacci",
+  "script_name": "Fibonacci",
+  "script_file": "scripts/demo_fibonacci.py",
+  "description": "Generates the first 15 numbers of the Fibonacci sequence with a short delay between each.",
+  "enabled": true,
+  "logging": false,
+  "order": 2
+}
