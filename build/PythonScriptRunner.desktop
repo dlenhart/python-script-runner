@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Python Script Runner
+Comment=A GUI utility for running Python scripts
+Exec=PythonScriptRunner
+Icon=PythonScriptRunner
+Type=Application
+Categories=Development;Utility;
+Terminal=false
+StartupNotify=true

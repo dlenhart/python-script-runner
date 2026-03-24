@@ -1,0 +1,67 @@
+#!/bin/bash
+# =============================================================================
+# AppRun — Entry point for the PythonScriptRunner AppImage
+#
+# Strategy:
+#   • App code  (PythonScriptRunner.py + runner/) lives inside the AppImage
+#     and is synced to ~/.local/share/PythonScriptRunner/ on every launch so
+#     updates to the AppImage are always picked up.
+#   • User data (scripts/, .venv/, logs/) lives only in that writable
+#     directory and is never overwritten by an update.
+#   • The bundled Python interpreter handles both the GUI and any venv
+#     creation for user scripts — no system Python required.
+# =============================================================================
+
+SELF="$(readlink -f "$0")"
+HERE="$(dirname "$SELF")"
+
+# Writable home for user data (respects $XDG_DATA_HOME if set)
+APP_DATA="${XDG_DATA_HOME:-$HOME/.local/share}/PythonScriptRunner"
+
+PYTHON_DIR="$HERE/python"
+PYTHON="$PYTHON_DIR/bin/python3"
+
+# ── Sanity check ─────────────────────────────────────────────────────────────
+if [ ! -x "$PYTHON" ]; then
+    echo "ERROR: Bundled Python not found at $PYTHON" >&2
+    exit 1
+fi
+
+# ── First-run: seed user data directory ──────────────────────────────────────
+# Only the scripts/ folder and requirements.txt are seeded once; they belong
+# to the user and are never overwritten after initial creation.
+if [ ! -d "$APP_DATA/scripts" ]; then
+    echo "First-time setup: initialising data directory at $APP_DATA ..."
+    mkdir -p "$APP_DATA/scripts"
+    cp -r "$HERE/app/scripts/." "$APP_DATA/scripts/"
+    cp    "$HERE/app/requirements.txt" "$APP_DATA/"
+fi
+
+# ── Sync app code on every launch ────────────────────────────────────────────
+# This ensures a newer AppImage always runs the latest code without wiping
+# the user's scripts or their installed .venv.
+mkdir -p "$APP_DATA"
+cp -f  "$HERE/app/PythonScriptRunner.py" "$APP_DATA/"
+cp -rf "$HERE/app/runner"                "$APP_DATA/"
+
+# ── Python environment ────────────────────────────────────────────────────────
+export PYTHONHOME="$PYTHON_DIR"
+export PATH="$PYTHON_DIR/bin:${PATH:-/usr/local/bin:/usr/bin:/bin}"
+export LD_LIBRARY_PATH="$HERE/lib:$PYTHON_DIR/lib:${LD_LIBRARY_PATH:-}"
+
+# ── Tcl/Tk paths (required for tkinter) ──────────────────────────────────────
+for d in \
+    "$HERE/share/tcltk/tcl8.6" \
+    "$PYTHON_DIR/lib/tcl8.6" \
+    "$PYTHON_DIR/lib/tcl8.6.0"; do
+    [ -d "$d" ] && { export TCL_LIBRARY="$d"; break; }
+done
+for d in \
+    "$HERE/share/tcltk/tk8.6" \
+    "$PYTHON_DIR/lib/tk8.6" \
+    "$PYTHON_DIR/lib/tk8.6.0"; do
+    [ -d "$d" ] && { export TK_LIBRARY="$d"; break; }
+done
+
+# ── Launch the app ────────────────────────────────────────────────────────────
+exec "$PYTHON" "$APP_DATA/PythonScriptRunner.py" "$@"

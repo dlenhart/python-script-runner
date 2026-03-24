@@ -1,0 +1,95 @@
+PythonScriptRunner — AppImage Build Instructions
+=================================================
+
+OVERVIEW
+--------
+The AppImage bundles a self-contained Python 3.12 interpreter (no system Python
+required) along with the app source and the Tcl/Tk shared libraries needed for
+the tkinter GUI. On first launch it seeds ~/.local/share/PythonScriptRunner/
+with the default scripts; on every subsequent launch it syncs the app code from
+the AppImage so updates are always picked up automatically.
+
+
+BUILD PREREQUISITES (Linux x86_64 only)
+----------------------------------------
+  sudo apt install curl tar tcl8.6 tk8.6        # Debian / Ubuntu
+  sudo dnf install curl tar tcl tk              # Fedora / RHEL / CentOS
+  sudo pacman -S curl tar tcl tk                # Arch
+
+
+BUILD STEPS
+-----------
+1. Transfer the project to a Linux x86_64 machine (or VM / container).
+
+2. From the project root, run the build script:
+
+     cd build
+     bash build-appimage.sh
+
+3. The script will:
+   a. Download python-build-standalone (CPython 3.12, ~30 MB, cached after first run)
+   b. Copy libtcl8.6 / libtk8.6 from the build machine into the AppDir
+   c. Copy the app source (PythonScriptRunner.py, runner/, scripts/)
+   d. Download appimagetool (cached after first run)
+   e. Package everything into:  PythonScriptRunner-x86_64.AppImage
+
+4. Output file location:
+     <project-root>/PythonScriptRunner-x86_64.AppImage
+
+
+RUNNING THE APPIMAGE
+--------------------
+  chmod +x PythonScriptRunner-x86_64.AppImage
+  ./PythonScriptRunner-x86_64.AppImage
+
+The only runtime requirement on target machines is FUSE.
+  - Modern Linux (kernel 5.13+): FUSE is built in — nothing to install.
+  - Older systems:  sudo apt install fuse   OR   sudo dnf install fuse
+
+
+USER DATA LOCATION
+------------------
+All writable data lives outside the AppImage in:
+  ~/.local/share/PythonScriptRunner/
+
+  scripts/          User scripts and manifests (seeded on first run, never overwritten)
+  requirements.txt  Dependencies for user scripts (seeded on first run)
+  .venv/            Auto-created virtual environment for running user scripts
+  logs/             Script output logs (if logging is enabled in a manifest)
+
+The app code (PythonScriptRunner.py, runner/) is synced from the AppImage on
+every launch, so distributing a new AppImage automatically updates the code
+while leaving the user's scripts and venv untouched.
+
+
+ADDING AN ICON
+--------------
+Place a 256x256 PNG named icon.png in the project root before building.
+If no icon.png is found, the build script generates a solid blue placeholder.
+
+
+UPDATING PYTHON VERSION
+-----------------------
+Edit the top of build/build-appimage.sh and change:
+  PYTHON_VERSION="3.12.9"
+  PYTHON_RELEASE="20250317"
+
+Releases are listed at:
+  https://github.com/astral-sh/python-build-standalone/releases
+
+
+BUILD ARTEFACTS (git-ignored)
+------------------------------
+The following are excluded from version control via .gitignore:
+  *.AppImage
+  build/AppDir/
+  build/python-standalone.tar.gz
+  build/appimagetool-*.AppImage
+
+
+FILES IN build/
+---------------
+  build-appimage.sh          Main build script
+  AppRun                     AppImage entry point (launcher)
+  PythonScriptRunner.desktop Desktop entry required by AppImage spec
+  instructions               This file

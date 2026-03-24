@@ -4,3 +4,9 @@ __pycache__/
 *.log
 .DS_Store
 logs/
+
+# AppImage build outputs (distribute separately, not via git)
+*.AppImage
+build/AppDir/
+build/python-standalone.tar.gz
+build/appimagetool-*.AppImage
