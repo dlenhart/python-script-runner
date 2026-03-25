@@ -5,5 +5,5 @@
   "description": "Test script to verify the GUI runner works correctly.",
   "enabled": true,
   "logging": true,
-  "order": 6
+  "order": 4
 }

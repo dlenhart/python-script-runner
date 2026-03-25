@@ -21,7 +21,6 @@ class ScriptManagerWindow(tk.Toplevel):
         self.resizable(False, False)
         self.config(bg=Config.BG_DARK)
         self.transient(parent)
-        self.grab_set()
 
         self._saved_snapshot = None
         self._dragging = False
@@ -296,8 +295,9 @@ class ScriptManagerWindow(tk.Toplevel):
         needs_refresh = self._needs_refresh
         parent = self.master
         callback = self.refresh_callback
-        self.grab_release()
         self.destroy()
+        parent.lift()
+        parent.focus_force()
         if needs_refresh:
             parent.after(0, callback)
 

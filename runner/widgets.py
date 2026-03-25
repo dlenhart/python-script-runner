@@ -108,7 +108,7 @@ class ScrollableNotebook(tk.Frame):
         self._selected_index = index
         self._tab_buttons[index].config(bg=_TAB_SELECTED_BG, fg=_TAB_SELECTED_FG)
         self._tab_frames[index].tkraise()
-        self._ensure_tab_visible(index)
+        self.after(1, lambda i=index: self._ensure_tab_visible(i))
 
     def _scroll_left(self) -> None:
         self._canvas.xview_scroll(-1, "units")
@@ -122,7 +122,6 @@ class ScrollableNotebook(tk.Frame):
         if index < 0 or index >= len(self._tab_buttons):
             return
         btn = self._tab_buttons[index]
-        self._inner.update_idletasks()
 
         btn_left = btn.winfo_x()
         btn_right = btn_left + btn.winfo_width()

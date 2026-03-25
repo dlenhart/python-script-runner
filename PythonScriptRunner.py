@@ -61,6 +61,10 @@ class App:
         self.root.bind("<Command-w>", lambda _: self._on_stop_shortcut())
         self.root.bind("<Control-w>", lambda _: self._on_stop_shortcut())
         self.root.bind("<Escape>", lambda _: self._on_close())
+        try:
+            self.root.createcommand('::tk::mac::Activate', self._on_mac_activate)
+        except Exception:
+            pass
 
     def _build_header(self) -> None:
         header = tk.Frame(self.root, bg=Config.BG_DARK)
@@ -442,6 +446,9 @@ class App:
             return self.tabs[idx]
         return None
 
+    def _on_mac_activate(self, *args) -> None:
+        self.root.after(50, self.root.focus_force)
+
     def _on_run_shortcut(self) -> None:
         td = self._current_tab()
         if td and td.status != TabData.STATUS_RUNNING:
@@ -480,6 +487,7 @@ class App:
         self._footer.destroy()
         self._build_tabs()
         self._build_footer()
+        self.root.update_idletasks()
 
         self._reattach_running_tabs(running)
 
